@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: wanalyticontainer
+    ports:
+      - "3000:3000"
+      - "3010:3010"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    
