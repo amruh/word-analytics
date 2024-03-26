@@ -1,0 +1,34 @@
+name: CI CD Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build the Docker image
+        run: docker build -t amiulam/word-analytics .
+      - name: Publish image to docker hub
+        run: docker push amiulam/word-analytics:latest
+      
+  # deploy:
+  #   needs: build
+  #   runs-on: [ubuntu-latest]
+  #   steps:
+  #     - name: Pull image from docker hub
+  #       run: docker pull amiulam/word-analytics:latest
+  #     - name: Delete old container
+  #       run: docker rm -f wanalyticontainer
+  #     - name: Run docker container
+  #       run: docker run -d -p 5000:5000 --name nodejs-app-container integrationninjas/nodejs-app
